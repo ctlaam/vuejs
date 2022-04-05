@@ -119,15 +119,15 @@
               <td>{{ emp.DepartmentName }}</td>
               <td>{{ emp.EmployeeCode }}</td>
               <td>{{ emp.EmployeeName }}</td>
-              <td>{{ emp.GenderName || "Chưa có" }}</td>
+              <td>{{ renderGender(emp.Gender)}}</td>
               <td>{{ emp.EmployeePosition || "Chưa có" }}</td>
               <td>{{ emp.TelephoneNumber || "Chưa có" }}</td>
               <td>{{ emp.Email || "Chưa có" }}</td>
               <td class="text-align-center">
-                {{ this.formatDate(emp.DateOfBirth) || "Chưa có" }}
+                {{formatDate(emp.DateOfBirth) || "Chưa có" }}
               </td>
               <td class="text-align-right">
-                {{ this.formatMoney(emp.Salary) || "Chưa có" }}
+                {{formatMoney(emp.Salary) || "Chưa có" }}
               </td>
             </tr>
           </tbody>
@@ -169,6 +169,7 @@
     </div>
     <EmployeeDetail
       :isShow="isShowDialog"
+      @formatDate="formatDate"
       @closeOnClick="showOrHideDialog"
       @reloadData = "reloadData"
       :employeeSelectedInChil="employeeSelected"
@@ -193,10 +194,23 @@ export default {
     EmployeeDetail,
   },
   methods: {
-    increment() {
-      this.number = this.number + 1;
-      console.log(this.number);  
+    // Hàm render ra Giới tính 
+    // 0 - nam
+    // 1 - nữ
+    // 2 - khác
+    renderGender(gender){
+      switch (gender){
+        case 0:
+          return "Nam"
+        case 1:
+          return "Nữ"
+        case 2 :
+          return "Khác"
+        default:
+          return "Chưa có"
+      }
     },
+
     // hàm load lại data mỗi thi crud nhân viên
     reloadData() {
       var me = this;

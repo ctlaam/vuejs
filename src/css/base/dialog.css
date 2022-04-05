@@ -10,6 +10,22 @@
     display:none;
 
 }
+.text-content {
+    padding: 5px 24px 16px;
+    font-size: 14px;
+    font-weight: 800;
+}
+.text-content::before{
+    content: "";
+    display: block;
+    height:4px;
+    width: 75px;
+    background-color:rgba(42,162,122,0.95);
+    border-radius:5px;
+    position: relative;
+    bottom:-22px;
+    
+}
 .m-dialog-box input:focus,.m-dialog-box select:focus,.m-dialog-box textarea:focus{ 
  border-color: #019160;
 }
@@ -229,9 +245,12 @@
     align-items: start;
 }
 .m-dialog-box .m-dialog-form {
-    width: 700px;
+    width: 750px;
     box-sizing: border-box;
     overflow: auto;
+}
+.div#content-right {
+    margin-right: 40px;
 }
 
 .m-dialog .m-body-form {
@@ -333,3 +352,52 @@ textarea.input-field-form.input-field-line {
     border-radius: 2px;
 }
 /* /Form chi tiết thông tin Nhân viên */
+
+/* error dialog */
+.form-component {
+    position: relative;
+}
+div#errorDialog {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: start;
+    background-color: rgba(200,53,53,0.9);
+    min-width: 200px;
+    height: 40px;
+    text-align: center;
+    border-radius: 5px;
+    top: 19px;
+    right: 118px;
+    padding: 5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.36);
+    display:none;
+
+}
+
+.errorDialogMsg {
+    margin-left: 10px;
+    color: #fff;
+    font-size: 14px;
+}
+i.fa-solid.fa-circle-exclamation {
+    font-size: 24px;
+    color: white;
+}
+.currency-unit {
+    font-style: italic;
+    position: absolute;
+    right: 6px;
+    bottom: 12px;
+}
+input[property="Salary"]{
+    padding-right:40px;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

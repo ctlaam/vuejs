@@ -112,8 +112,8 @@ th {
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: rgb(255,255,255);
 }
 tbody tr:nth-child(odd) {
-    background-color: #d2e4fb;
+    background-color: rgb(250,250,250);
 }

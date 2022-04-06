@@ -1,7 +1,7 @@
 .m-toast-message{
     position:fixed;
-    left:calc(50% - 125px); 
-    top: 50px;
+    right: 24px;
+    top: 65px;
     min-width:280px;
     height:48px;
     justify-content: space-between;
@@ -11,11 +11,11 @@
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.16);
     display:none;
     border: 1px solid #019160;
-    z-index: 9999999;
-
-
+    z-index: 9999999;  
 
 }
+
+
 .m-icon-toast{
     width:30px;
     height:30px;
@@ -28,7 +28,7 @@ i.fa-solid.fa-check {
     font-size: 24px;
     color:#fff;
     position: relative;
-    bottom: -2px;
+    bottom: -3px;
 }
 .m-close-toast{
     font-size: 24px;

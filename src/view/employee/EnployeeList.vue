@@ -34,7 +34,7 @@
           class="m-btn-delete"
           @click="ComfirmDeleteEmployee"
         ></button>
-        <button class="m-btn-refresh"></button>
+        <button @click="reloadData" class="m-btn-refresh"></button>
       </div>
     </div>
     <div class="m-grid">
@@ -110,24 +110,24 @@
           </thead>
           <tbody class="tbody">
             <tr
-              v-for="(emp,index) in employees"
+              v-for="(emp, index) in employees"
               :key="emp.EmployeeId"
               @dblclick="rowOnDblClick(emp)"
               @click="rowOnClick($event, emp)"
             >
-              <td>{{index+1}}</td>
+              <td>{{ index + 1 }}</td>
               <td>{{ emp.DepartmentName }}</td>
               <td>{{ emp.EmployeeCode }}</td>
               <td>{{ emp.EmployeeName }}</td>
-              <td>{{ renderGender(emp.Gender)}}</td>
+              <td>{{ renderGender(emp.Gender) }}</td>
               <td>{{ emp.EmployeePosition || "Chưa có" }}</td>
               <td>{{ emp.TelephoneNumber || "Chưa có" }}</td>
               <td>{{ emp.Email || "Chưa có" }}</td>
               <td class="text-align-center">
-                {{formatDate(emp.DateOfBirth) || "Chưa có" }}
+                {{ formatDate(emp.DateOfBirth) || "Chưa có" }}
               </td>
               <td class="text-align-right">
-                {{formatMoney(emp.Salary) || "Chưa có" }}
+                {{ formatMoney(emp.Salary) || "Chưa có" }}
               </td>
             </tr>
           </tbody>
@@ -171,7 +171,7 @@
       :isShow="isShowDialog"
       @formatDate="formatDate"
       @closeOnClick="showOrHideDialog"
-      @reloadData = "reloadData"
+      @reloadData="reloadData"
       :employeeSelectedInChil="employeeSelected"
       :formMode="formMode"
       :showToastMsgErr="showToastMsgErr"
@@ -194,20 +194,20 @@ export default {
     EmployeeDetail,
   },
   methods: {
-    // Hàm render ra Giới tính 
+    // Hàm render ra Giới tính
     // 0 - nam
     // 1 - nữ
     // 2 - khác
-    renderGender(gender){
-      switch (gender){
+    renderGender(gender) {
+      switch (gender) {
         case 0:
-          return "Nam"
+          return "Nam";
         case 1:
-          return "Nữ"
-        case 2 :
-          return "Khác"
+          return "Nữ";
+        case 2:
+          return "Khác";
         default:
-          return "Chưa có"
+          return "Chưa có";
       }
     },
 
@@ -224,8 +224,6 @@ export default {
           // kiểm tra mã lỗi của api và thực hiện thao tác với các mã lỗi đó
           me.showToastMsgErr(err.response.data.Message);
         });
-      
-
     },
     getname() {
       return this.Name;
@@ -259,7 +257,7 @@ export default {
         me.showToastMsgErr(error);
       }
     },
-    // Hàm show or hide dialog 
+    // Hàm show or hide dialog
     // param: isShow: true: hiện dialog, false: ẩn dialog
     showOrHideDialog(isShow) {
       this.isShowDialog = isShow;
@@ -286,9 +284,11 @@ export default {
     },
     rowOnClick(e, emp) {
       // lấy các thẻ tr
+      document.getElementById("btnDelete").style.display = "inline-block";
       let trElements = $("table#tblEmployeeList tbody tr");
       // nếu thẻ tr đã chứa class m-row-selected thì click vào hủy bỏ chọn
       if ($(e.target.parentElement).hasClass("m-row-selected")) {
+        document.getElementById("btnDelete").style.display = "none";
         trElements.removeClass("m-row-selected");
         this.employeeSelected = {};
       } else {
@@ -302,11 +302,6 @@ export default {
     ComfirmDeleteEmployee() {
       let me = this;
       let employeeSelected = me.employeeSelected;
-     
-      // nếu chưa chọn nhân viên thì thông báo
-      if (!employeeSelected.EmployeeName) {        
-        me.showToastMsgInfo("Bạn chưa chọn nhân viên để xóa");
-      } else {
         // comfirm delete
         this.showConfirm(
           `Bạn có chắc chắn muốn xóa nhân viên &nbsp <b style="font-size:13px">${employeeSelected.EmployeeName}</b> `,
@@ -317,16 +312,17 @@ export default {
               )
               // show toast message khi xóa thành công
               .then(function () {
+                // show toast msg
                 me.showToastMsg("Xóa thành công");
-                me.reloadData()
+                // load lai dữ liệu sau khi xóa
+                me.reloadData();
               })
               // show toast error
-              .catch(function(err) {
+              .catch(function (err) {
                 me.showToastMsgErr(err.response.data.devMsg);
               });
           }
         );
-      }
     },
 
     /**
@@ -336,9 +332,12 @@ export default {
      * Created by: Cao Thanh Lâm - MF1103
      * Created date: 22:05 29/03/2022
      */
+    // Formate ngày và hiện thị trên màn hình
     formatDate(value) {
       try {
+        // nếu dữ liệu tồn tại
         if (value) {
+          // lấy dữ liệu date từ trên api
           value = new Date(value);
           // lây ra ngày
           let date = value.getDate();
@@ -355,9 +354,11 @@ export default {
         }
         return value;
       } catch (error) {
+        // show toast error nếu lỗi
         this.showToastMsgErr(error);
       }
     },
+    // format tiền
     formatMoney(value) {
       try {
         if (value) {
@@ -367,6 +368,7 @@ export default {
         }
         return value;
       } catch (error) {
+        // show toast error
         this.showToastMsgErr(error);
       }
     },
@@ -374,7 +376,7 @@ export default {
 
   data() {
     return {
-      showToastMsgInfo:this.CommonJs.showToastMsgInfo,
+      showToastMsgInfo: this.CommonJs.showToastMsgInfo,
       showToastMsgErr: this.CommonJs.showToastMsgErr,
       showToastMsg: this.CommonJs.showToastMsg,
       showDialogMsg: this.CommonJs.showDialogMsg,
@@ -412,30 +414,22 @@ export default {
   },
 
   // 3before mount
-  beforeMount() {
-    
-  },
+  beforeMount() {},
 
   // 4mounted
-  mounted() {
-    
-  },
+  mounted() {},
 
   // 5before update
-  beforeUpdate() {
-  },
+  beforeUpdate() {},
 
   // 6updated
-  updated() {
-  },
+  updated() {},
 
   // 7before destroy
-  beforeUnmount() {
-  },
+  beforeUnmount() {},
 
   // 8destroyed
-  unmounted() {
-  },
+  unmounted() {},
   // props
   props: [],
   /**

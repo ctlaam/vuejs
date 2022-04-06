@@ -269,7 +269,9 @@ export default {
       this.employee = newValue;
     },
   },
+  // hàm created
   created() {
+    // lấy dữ liệu từ trên data
     let me = this;
     axios
       .get("http://amis.manhnv.net/api/v1/Departments")
@@ -290,16 +292,21 @@ export default {
   },
 
   methods: {
+    // hàm reload data
     relaoadData() {
       this.$emit("reloadData");
     },
+    // fomart date ở trong dialog detail
     onChangeFormatDate(e) {
+      // kiểm tra nếu target chứa attibute "dateofbirth" thì gán employee.dateofbith = value
       if (e.target.hasAttribute("dateOfBirth")) {
         this.employee.DateOfBirth = e.target.value;
+      // Nếu target chứa attibute "createdDate" thì gán employee.createdDate = value
       } else if (e.target.hasAttribute("createdDate")) {
         this.employee.CreatedDate = e.target.value;
       }
     },
+    // fomart dữ liệu date do người dùng nhập vào
     bindingDate(date) {
       if (date) {
         date = new Date(date);
@@ -318,9 +325,12 @@ export default {
         return "";
       }
     },
+    // close dialog
     btnCloseDialog() {
       this.$emit("closeOnClick", false);
     },
+
+    // lưu dữ liệu
     btnSaveOnClick() {
       let employee = this.employee;
       // validate dữ liệu
@@ -331,6 +341,7 @@ export default {
       // thu thập thông tin nhân viên
 
       // gọi api lưu dữ liệu
+      // Formmode = add
       if (this.formMode == this.MISAEnum.FormMode.Add) {
         axios
           .post("http://amis.manhnv.net/api/v1/Employees", employee)
@@ -340,22 +351,29 @@ export default {
             // ẩn form chi tiết và load lại dữ liẹu
 
             this.btnCloseDialog();
+            // show toast
             this.showToastMsg("Thêm thành công");
-            console.log(123);
+            // load lại dữ liệu
             this.relaoadData();
           })
           .catch((error) => {
             this.showToastMsgErr(error.response.data.devMsg);
           });
+
+      // formmode = put
       } else {
         axios
+        // update dữ liệu employee
           .put(
             `http://amis.manhnv.net/api/v1/Employees/${employee.EmployeeId}`,
             employee
           )
           .then(() => {
+            //show toast
             this.showToastMsg("Sửa thành công");
+            // đóng dialog
             this.btnCloseDialog();
+            // reload lại data
             this.relaoadData();
           })
           .catch((error) => {
@@ -363,14 +381,26 @@ export default {
           });
       }
     },
+    // validate dialog
     validateDialog(event) {
+      // lấy target và value
       var el = event.target;
       var value = el.value;
+      // Chia trường hợp switch case của từng trường dữ liệu
+      //1.Employeename
+      //2.EmployeeCode
+      //3.EmployeeEmail
+      //4.EmployeeNumber
+      //5.EmployeeIdentifyNumber
+      //6.EmployeeDateOfBirth
       switch (el.getAttribute("validate")) {
         case "EmployeeName":
           if (!value) {
+            //show dialog
             this.showErrorDialog("Vui lòng điền tên nhân viên");
+            //add class error
             el.classList.add("error");
+            // sau 3s remove class error
             setTimeout(() => {
               el.classList.remove("error");
             }, 3000);
@@ -379,7 +409,11 @@ export default {
         case "EmployeeCode":
           if (!value) {
             this.showErrorDialog("Vui lòng điền mã nhân viên");
+            //add class error
+
             el.classList.add("error");
+            // sau 3s remove class error
+
             setTimeout(() => {
               el.classList.remove("error");
             }, 3000);
@@ -389,11 +423,16 @@ export default {
           var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
           if (!value) {
             this.showErrorDialog("Vui lòng điền Email");
+            //add class error
+
             el.classList.add("error");
+            // sau 3s remove class error
+
             setTimeout(() => {
               el.classList.remove("error");
             }, 3000);
           } else if (value) {
+            //kiểm tra email có hợp lệ hay không
             if (!value.match(mailformat)) {
               this.showErrorDialog("Email không hợp lệ");
               el.classList.add("error");
@@ -404,12 +443,14 @@ export default {
           }
           break;
         case "EmployeeNumber":
+          // kiểm tra điền sđt
           if (!value) {
             this.showErrorDialog("Vui lòng điền số điện thoại");
             el.classList.add("error");
             setTimeout(() => {
               el.classList.remove("error");
             }, 3000);
+            // kiểm tra số điện thoại hợp lệ
           } else if (value) {
             if (!value.match(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g)) {
               this.showErrorDialog("Vui lòng chỉ điền số");
@@ -420,6 +461,7 @@ export default {
             }
           }
           break;
+          // validate chứng minh thư
         case "EmployeeIdentifyNumber":
           if (!value) {
             this.showErrorDialog("Vui lòng điền số CTM/CCCD");
@@ -429,19 +471,45 @@ export default {
             }, 3000);
           }
           break;
+          // validate ngày sinh nhật < ngày hiện tại
         case "EmployeeDateOfBirth":
-          let currentYear = new Date().getFullYear();
+          const currentYear = new Date().getFullYear();
+          const currentMonth = new Date().getMonth() + 1;
+          const currentDay = new Date().getDate();
           if (value) {
             let date = new Date(value);
             // lây ra năm sinh của người nhập
             let year = date.getFullYear();
-            if(year > currentYear) {
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            // nếu năm lớn hơn hiện tại
+            if (year > currentYear) {
               this.showErrorDialog("Ngày sinh không hợp lệ");
               el.classList.add("error");
               setTimeout(() => {
                 el.classList.remove("error");
               }, 3000);
               el.value = "";
+              // năm = nhau tháng lơn hơn hiện tại
+            } else if (year == currentYear) {
+              if (month > currentMonth) {
+                this.showErrorDialog("Ngày sinh không hợp lệ");
+                el.classList.add("error");
+                setTimeout(() => {
+                  el.classList.remove("error");
+                }, 3000);
+                el.value = "";
+                // năm tháng = nhau và ngày lớn hơn hiện tại
+              } else if (month == currentMonth) {
+                if (day > currentDay) {
+                  this.showErrorDialog("Ngày sinh không hợp lệ");
+                  el.classList.add("error");
+                  setTimeout(() => {
+                    el.classList.remove("error");
+                  }, 3000);
+                  el.value = "";
+                }
+              }
             }
           }
         default:
@@ -450,5 +518,4 @@ export default {
     },
   },
 };
-
 </script>

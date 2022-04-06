@@ -21,9 +21,11 @@
     opacity: 0.7;
 
 }
+
 .m-btn-delete{
     background-image: url("https://img.icons8.com/ios-filled/344/fa314a/delete-trash.png");
     margin-right: 5px;
+    display:none;
 }
 .m-btn-delete:hover{
     opacity:1
